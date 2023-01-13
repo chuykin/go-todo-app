@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/IncubusX/go-todo-app"
 	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -45,9 +44,6 @@ func (r *TodoListPostgres) GetAll(userId int) ([]todo.TodoList, error) {
 
 	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s AS tl INNER JOIN %s AS ul ON tl.id = ul.list_id WHERE ul.user_id = $1;",
 		todoListsTable, usersListsTable)
-
-	logrus.Debugf("Query: %s", query)
-
 	if err := r.db.Select(&lists, query, userId); err != nil {
 		return nil, err
 	}
@@ -61,7 +57,6 @@ func (r *TodoListPostgres) GetById(userId, listId int) (todo.TodoList, error) {
 	query := fmt.Sprintf(`SELECT tl.id, tl.title, tl.description FROM %s AS tl 
 								   INNER JOIN %s AS ul ON tl.id = ul.list_id 
 								   WHERE ul.user_id = $1 AND tl.id = $2;`, todoListsTable, usersListsTable)
-	logrus.Debugf("Query: %s", query)
 	err := r.db.Get(&list, query, userId, listId)
 
 	return list, err
@@ -90,10 +85,6 @@ func (r *TodoListPostgres) Update(userId, listId int, input todo.UpdateListInput
 		todoListsTable, setQuery, usersListsTable, argId, argId+1)
 
 	args = append(args, userId, listId)
-
-	logrus.Debugf("Query: %s", query)
-	logrus.Debugf("args: %s", args)
-
 	_, err := r.db.Exec(query, args...)
 
 	return err
@@ -102,7 +93,6 @@ func (r *TodoListPostgres) Update(userId, listId int, input todo.UpdateListInput
 func (r *TodoListPostgres) Delete(userId, listId int) error {
 	query := fmt.Sprintf("DELETE FROM %s AS tl USING %s as ul WHERE tl.id = ul.list_id AND ul.user_id = $1 AND ul.list_id = $2;",
 		todoListsTable, usersListsTable)
-	logrus.Debugf("Query: %s", query)
 	_, err := r.db.Exec(query, userId, listId)
 
 	return err
