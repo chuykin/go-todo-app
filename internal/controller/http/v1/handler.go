@@ -1,8 +1,8 @@
-package handler
+package v1
 
 import (
 	_ "github.com/IncubusX/go-todo-app/docs"
-	"github.com/IncubusX/go-todo-app/pkg/service"
+	"github.com/IncubusX/go-todo-app/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"       // swagger embed files
 	"github.com/swaggo/gin-swagger" // gin-swagger middleware
@@ -26,7 +26,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.signIn)
 	}
 
-	api := router.Group("/api", h.userIdentity)
+	api := router.Group("/api/v1", h.userIdentity)
 	{
 		lists := api.Group("/lists")
 		{

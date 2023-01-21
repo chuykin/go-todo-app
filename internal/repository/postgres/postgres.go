@@ -27,7 +27,7 @@ const (
 	ReconnectCooldown = 5 * time.Second
 )
 
-func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
+func NewDB(cfg Config) (*sqlx.DB, error) {
 	connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode)
 

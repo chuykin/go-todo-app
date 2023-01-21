@@ -1,7 +1,7 @@
-package handler
+package v1
 
 import (
-	"github.com/IncubusX/go-todo-app"
+	"github.com/IncubusX/go-todo-app/internal/entity"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -12,14 +12,14 @@ import (
 // @ID				create-account
 // @Accept			json
 // @Produce		json
-// @Param			input	body		todo.User	true	"account info"
+// @Param			input	body		entity.User	true	"account info"
 // @Success		200		{object}	idResponse
 // @Failure		400		{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
 // @Router			/auth/sign-up [post]
 func (h *Handler) signUp(c *gin.Context) {
-	var input todo.User
+	var input entity.User
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

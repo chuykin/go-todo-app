@@ -7,6 +7,6 @@ COPY ./ ./
 
 # build go app
 RUN go mod download
-RUN go build -o api ./cmd/main.go
+RUN go build -o api ./cmd/app/main.go
 
 CMD ["./api"]

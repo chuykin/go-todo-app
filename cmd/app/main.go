@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	todo "github.com/IncubusX/go-todo-app"
-	"github.com/IncubusX/go-todo-app/pkg/handler"
-	"github.com/IncubusX/go-todo-app/pkg/repository"
-	"github.com/IncubusX/go-todo-app/pkg/service"
+	"github.com/IncubusX/go-todo-app/internal/app"
+	"github.com/IncubusX/go-todo-app/internal/controller/http/v1"
+	"github.com/IncubusX/go-todo-app/internal/repository"
+	postgres "github.com/IncubusX/go-todo-app/internal/repository/postgres"
+	"github.com/IncubusX/go-todo-app/internal/service"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -40,7 +41,7 @@ func main() {
 		logrus.Fatalf("Ошибка при чтении переменных окружения:%s", err.Error())
 	}
 
-	db, err := repository.NewPostgresDB(repository.Config{
+	db, err := postgres.NewDB(postgres.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		DBName:   viper.GetString("db.dbname"),
@@ -54,9 +55,9 @@ func main() {
 
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
-	handlers := handler.NewHandler(services)
+	handlers := v1.NewHandler(services)
 
-	srv := new(todo.Server)
+	srv := new(app.Server)
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil && err.Error() != serverClosed {
 			logrus.Fatalf("Ошибка при запуске HTTP сервера: %s", err.Error())
@@ -74,7 +75,7 @@ func initConfig() error {
 	return viper.ReadInConfig()
 }
 
-func gracefulShutdown(srv *todo.Server, db *sqlx.DB) {
+func gracefulShutdown(srv *app.Server, db *sqlx.DB) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit

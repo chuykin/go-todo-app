@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/items/{id}": {
+        "/api/v1/items/{id}": {
             "get": {
                 "security": [
                     {
@@ -33,7 +33,7 @@ const docTemplate = `{
                 "tags": [
                     "items"
                 ],
-                "summary": "Get todo list item By ID",
+                "summary": "Get list item By ID",
                 "operationId": "get-list-item-by-id",
                 "parameters": [
                     {
@@ -48,31 +48,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoItem"
+                            "$ref": "#/definitions/entity.TodoItem"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -93,7 +93,7 @@ const docTemplate = `{
                 "tags": [
                     "items"
                 ],
-                "summary": "Update todo list item",
+                "summary": "Update list item",
                 "operationId": "update-item",
                 "parameters": [
                     {
@@ -109,7 +109,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoItem"
+                            "$ref": "#/definitions/entity.TodoItem"
                         }
                     }
                 ],
@@ -117,31 +117,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
+                            "$ref": "#/definitions/v1.statusResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -162,7 +162,7 @@ const docTemplate = `{
                 "tags": [
                     "items"
                 ],
-                "summary": "Delete todo list item",
+                "summary": "Delete list item",
                 "operationId": "delete-item",
                 "parameters": [
                     {
@@ -177,37 +177,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
+                            "$ref": "#/definitions/v1.statusResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/api/lists": {
+        "/api/v1/lists": {
             "get": {
                 "security": [
                     {
@@ -224,37 +224,37 @@ const docTemplate = `{
                 "tags": [
                     "lists"
                 ],
-                "summary": "Get all todo lists",
+                "summary": "Get all lists",
                 "operationId": "get-all-lists",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.getAllListsResponse"
+                            "$ref": "#/definitions/v1.getAllListsResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -275,7 +275,7 @@ const docTemplate = `{
                 "tags": [
                     "lists"
                 ],
-                "summary": "Create todo list",
+                "summary": "Create list",
                 "operationId": "create-list",
                 "parameters": [
                     {
@@ -284,7 +284,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoList"
+                            "$ref": "#/definitions/entity.TodoList"
                         }
                     }
                 ],
@@ -292,37 +292,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.idResponse"
+                            "$ref": "#/definitions/v1.idResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/api/lists/{id}": {
+        "/api/v1/lists/{id}": {
             "get": {
                 "security": [
                     {
@@ -339,7 +339,7 @@ const docTemplate = `{
                 "tags": [
                     "lists"
                 ],
-                "summary": "Get todo list by ID",
+                "summary": "Get list by ID",
                 "operationId": "get-list-by-id",
                 "parameters": [
                     {
@@ -354,31 +354,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoList"
+                            "$ref": "#/definitions/entity.TodoList"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -399,7 +399,7 @@ const docTemplate = `{
                 "tags": [
                     "lists"
                 ],
-                "summary": "Update todo list",
+                "summary": "Update list",
                 "operationId": "update-list",
                 "parameters": [
                     {
@@ -415,7 +415,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoList"
+                            "$ref": "#/definitions/entity.TodoList"
                         }
                     }
                 ],
@@ -423,31 +423,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
+                            "$ref": "#/definitions/v1.statusResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -468,7 +468,7 @@ const docTemplate = `{
                 "tags": [
                     "lists"
                 ],
-                "summary": "Delete todo list",
+                "summary": "Delete list",
                 "operationId": "delete-list",
                 "parameters": [
                     {
@@ -483,37 +483,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
+                            "$ref": "#/definitions/v1.statusResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
             }
         },
-        "/api/lists/{id}/items": {
+        "/api/v1/lists/{id}/items": {
             "get": {
                 "security": [
                     {
@@ -530,7 +530,7 @@ const docTemplate = `{
                 "tags": [
                     "items"
                 ],
-                "summary": "Get All todo list item",
+                "summary": "Get All list item",
                 "operationId": "get-all-list-items",
                 "parameters": [
                     {
@@ -545,31 +545,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.getAllItemsResponse"
+                            "$ref": "#/definitions/v1.getAllItemsResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -590,7 +590,7 @@ const docTemplate = `{
                 "tags": [
                     "items"
                 ],
-                "summary": "Create todo item",
+                "summary": "Create item",
                 "operationId": "create-item",
                 "parameters": [
                     {
@@ -606,7 +606,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.TodoItem"
+                            "$ref": "#/definitions/entity.TodoItem"
                         }
                     }
                 ],
@@ -614,31 +614,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.idResponse"
+                            "$ref": "#/definitions/v1.idResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -665,7 +665,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handler.signInInput"
+                            "$ref": "#/definitions/v1.signInInput"
                         }
                     }
                 ],
@@ -673,25 +673,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.signInResponse"
+                            "$ref": "#/definitions/v1.signInResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -718,7 +718,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.User"
+                            "$ref": "#/definitions/entity.User"
                         }
                     }
                 ],
@@ -726,25 +726,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.idResponse"
+                            "$ref": "#/definitions/v1.idResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     },
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
+                            "$ref": "#/definitions/v1.errorResponse"
                         }
                     }
                 }
@@ -752,76 +752,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handler.errorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.getAllItemsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/todo.TodoItem"
-                    }
-                }
-            }
-        },
-        "handler.getAllListsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/todo.TodoList"
-                    }
-                }
-            }
-        },
-        "handler.idResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "handler.signInInput": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.signInResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.statusResponse": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "todo.TodoItem": {
+        "entity.TodoItem": {
             "type": "object",
             "required": [
                 "description",
@@ -842,7 +773,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todo.TodoList": {
+        "entity.TodoList": {
             "type": "object",
             "required": [
                 "title"
@@ -859,7 +790,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todo.User": {
+        "entity.User": {
             "type": "object",
             "required": [
                 "name",
@@ -874,6 +805,75 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.errorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.getAllItemsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.TodoItem"
+                    }
+                }
+            }
+        },
+        "v1.getAllListsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.TodoList"
+                    }
+                }
+            }
+        },
+        "v1.idResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.signInInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.signInResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.statusResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
                     "type": "string"
                 }
             }

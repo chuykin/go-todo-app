@@ -1,4 +1,4 @@
-package todo
+package entity
 
 import "errors"
 

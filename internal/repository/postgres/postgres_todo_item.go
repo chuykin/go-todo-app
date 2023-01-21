@@ -2,20 +2,20 @@ package repository
 
 import (
 	"fmt"
-	"github.com/IncubusX/go-todo-app"
+	"github.com/IncubusX/go-todo-app/internal/entity"
 	"github.com/jmoiron/sqlx"
 	"strings"
 )
 
-type TodoItemPostgres struct {
+type TodoItem struct {
 	db *sqlx.DB
 }
 
-func NewTodoItemPostgres(db *sqlx.DB) *TodoItemPostgres {
-	return &TodoItemPostgres{db: db}
+func NewTodoItem(db *sqlx.DB) *TodoItem {
+	return &TodoItem{db: db}
 }
 
-func (r *TodoItemPostgres) Create(listId int, input todo.TodoItem) (int, error) {
+func (r *TodoItem) Create(listId int, input entity.TodoItem) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -39,8 +39,8 @@ func (r *TodoItemPostgres) Create(listId int, input todo.TodoItem) (int, error) 
 	return itemId, tx.Commit()
 }
 
-func (r *TodoItemPostgres) GetAll(userId, listId int) ([]todo.TodoItem, error) {
-	var items []todo.TodoItem
+func (r *TodoItem) GetAll(userId, listId int) ([]entity.TodoItem, error) {
+	var items []entity.TodoItem
 
 	query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s AS ti "+
 		"INNER JOIN %s AS li ON li.item_id = ti.id "+
@@ -54,8 +54,8 @@ func (r *TodoItemPostgres) GetAll(userId, listId int) ([]todo.TodoItem, error) {
 	return items, nil
 }
 
-func (r *TodoItemPostgres) GetById(userId, itemId int) (todo.TodoItem, error) {
-	var item todo.TodoItem
+func (r *TodoItem) GetById(userId, itemId int) (entity.TodoItem, error) {
+	var item entity.TodoItem
 
 	query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s AS ti "+
 		"INNER JOIN %s AS li ON li.item_id = ti.id "+
@@ -67,7 +67,7 @@ func (r *TodoItemPostgres) GetById(userId, itemId int) (todo.TodoItem, error) {
 	return item, err
 }
 
-func (r *TodoItemPostgres) Update(userId, itemId int, input todo.UpdateItemInput) error {
+func (r *TodoItem) Update(userId, itemId int, input entity.UpdateItemInput) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1
@@ -103,7 +103,7 @@ func (r *TodoItemPostgres) Update(userId, itemId int, input todo.UpdateItemInput
 	return err
 }
 
-func (r *TodoItemPostgres) Delete(userId, itemId int) error {
+func (r *TodoItem) Delete(userId, itemId int) error {
 	query := fmt.Sprintf("DELETE FROM %s AS ti USING %s as ul, %s as li "+
 		"WHERE  ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $1 AND ti.id = $2;",
 		todoItemsTable, usersListsTable, listsItemsTable)

@@ -1,13 +1,13 @@
-package handler
+package v1
 
 import (
-	"github.com/IncubusX/go-todo-app"
+	"github.com/IncubusX/go-todo-app/internal/entity"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-// @Summary		Create todo item
+// @Summary		Create item
 // @Security		ApiKeyAuth
 // @Tags			items
 // @Description	Создание задачи
@@ -15,12 +15,12 @@ import (
 // @Accept			json
 // @Produce		json
 // @Param			id		path		int				true	"List ID"
-// @Param			input	body		todo.TodoItem	true	"item info"
+// @Param			input	body		entity.TodoItem	true	"item info"
 // @Success		200		{object}	idResponse
 // @Failure		400,401	{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
-// @Router			/api/lists/{id}/items [post]
+// @Router			/api/v1/lists/{id}/items [post]
 func (h *Handler) createItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -33,7 +33,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	var input todo.TodoItem
+	var input entity.TodoItem
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -50,10 +50,10 @@ func (h *Handler) createItem(c *gin.Context) {
 }
 
 type getAllItemsResponse struct {
-	Data []todo.TodoItem `json:"data"`
+	Data []entity.TodoItem `json:"data"`
 }
 
-// @Summary		Get All todo list item
+// @Summary		Get All list item
 // @Security		ApiKeyAuth
 // @Tags			items
 // @Description	Получение списка задач
@@ -65,7 +65,7 @@ type getAllItemsResponse struct {
 // @Failure		400,401	{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
-// @Router			/api/lists/{id}/items [get]
+// @Router			/api/v1/lists/{id}/items [get]
 func (h *Handler) getAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -89,7 +89,7 @@ func (h *Handler) getAllItems(c *gin.Context) {
 	})
 }
 
-// @Summary		Get todo list item By ID
+// @Summary		Get list item By ID
 // @Security		ApiKeyAuth
 // @Tags			items
 // @Description	Получение конкретной задачи по ИД
@@ -97,11 +97,11 @@ func (h *Handler) getAllItems(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Param			id		path		int	true	"Item ID"
-// @Success		200		{object}	todo.TodoItem
+// @Success		200		{object}	entity.TodoItem
 // @Failure		400,401	{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
-// @Router			/api/items/{id} [get]
+// @Router			/api/v1/items/{id} [get]
 func (h *Handler) getItemById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -123,7 +123,7 @@ func (h *Handler) getItemById(c *gin.Context) {
 	c.JSON(http.StatusOK, item)
 }
 
-// @Summary		Update todo list item
+// @Summary		Update list item
 // @Security		ApiKeyAuth
 // @Tags			items
 // @Description	Обновление задачи
@@ -131,12 +131,12 @@ func (h *Handler) getItemById(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Param			id		path		int				true	"List ID"
-// @Param			input	body		todo.TodoItem	true	"item info"
+// @Param			input	body		entity.TodoItem	true	"item info"
 // @Success		200		{object}	statusResponse
 // @Failure		400,401	{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
-// @Router			/api/items/{id} [put]
+// @Router			/api/v1/items/{id} [put]
 func (h *Handler) updateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -149,7 +149,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 		return
 	}
 
-	var input todo.UpdateItemInput
+	var input entity.UpdateItemInput
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -166,7 +166,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 
 }
 
-// @Summary		Delete todo list item
+// @Summary		Delete list item
 // @Security		ApiKeyAuth
 // @Tags			items
 // @Description	Удаление задачи
@@ -178,7 +178,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 // @Failure		400,401	{object}	errorResponse
 // @Failure		500		{object}	errorResponse
 // @Failure		default	{object}	errorResponse
-// @Router			/api/items/{id} [delete]
+// @Router			/api/v1/items/{id} [delete]
 func (h *Handler) deleteItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
