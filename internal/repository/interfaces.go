@@ -2,6 +2,8 @@ package repository
 
 import "github.com/IncubusX/go-todo-app/internal/entity"
 
+//go:generate mockgen -source=interfaces.go -destination=mocks/mock.go
+
 type (
 	Authorization interface {
 		CreateUser(user entity.User) (int, error)

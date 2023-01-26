@@ -5,6 +5,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	ErrInvalidInputBody = "invalid input body"
+	ErrServiceFailure   = "service failure"
+)
+
 type signInResponse struct {
 	Token string `json:"token"`
 }

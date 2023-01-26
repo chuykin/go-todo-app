@@ -44,11 +44,9 @@ func (r *TodoList) GetAll(userId int) ([]entity.TodoList, error) {
 
 	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s AS tl INNER JOIN %s AS ul ON tl.id = ul.list_id WHERE ul.user_id = $1;",
 		todoListsTable, usersListsTable)
-	if err := r.db.Select(&lists, query, userId); err != nil {
-		return nil, err
-	}
+	err := r.db.Select(&lists, query, userId)
 
-	return lists, nil
+	return lists, err
 }
 
 func (r *TodoList) GetById(userId, listId int) (entity.TodoList, error) {
@@ -81,7 +79,7 @@ func (r *TodoList) Update(userId, listId int, input entity.UpdateListInput) erro
 
 	setQuery := strings.Join(setValues, ", ")
 
-	query := fmt.Sprintf("UPDATE %s AS tl SET %s FROM %s AS ul WHERE tl.id = ul.list_id AND ul.user_id = $%d AND ul.list_id = $%d",
+	query := fmt.Sprintf(`UPDATE %s AS tl SET %s FROM %s AS ul WHERE tl.id = ul.list_id AND ul.user_id = $%d AND ul.list_id = $%d`,
 		todoListsTable, setQuery, usersListsTable, argId, argId+1)
 
 	args = append(args, userId, listId)
@@ -91,7 +89,7 @@ func (r *TodoList) Update(userId, listId int, input entity.UpdateListInput) erro
 }
 
 func (r *TodoList) Delete(userId, listId int) error {
-	query := fmt.Sprintf("DELETE FROM %s AS tl USING %s as ul WHERE tl.id = ul.list_id AND ul.user_id = $1 AND ul.list_id = $2;",
+	query := fmt.Sprintf(`DELETE FROM %s AS tl USING %s as ul WHERE tl.id = ul.list_id AND ul.user_id = $1 AND ul.list_id = $2;`,
 		todoListsTable, usersListsTable)
 	_, err := r.db.Exec(query, userId, listId)
 

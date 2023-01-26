@@ -6,29 +6,29 @@ import (
 	"net/http"
 )
 
-// @Summary		SignUp
+// @Summary			SignUp
 // @Tags			auth
-// @Description	Создание аккаунта
+// @Description		Создание аккаунта
 // @ID				create-account
 // @Accept			json
-// @Produce		json
+// @Produce			json
 // @Param			input	body		entity.User	true	"account info"
-// @Success		200		{object}	idResponse
-// @Failure		400		{object}	errorResponse
-// @Failure		500		{object}	errorResponse
-// @Failure		default	{object}	errorResponse
+// @Success			200		{object}	idResponse
+// @Failure			400		{object}	errorResponse
+// @Failure			500		{object}	errorResponse
+// @Failure			default	{object}	errorResponse
 // @Router			/auth/sign-up [post]
 func (h *Handler) signUp(c *gin.Context) {
 	var input entity.User
 
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	id, err := h.services.Authorization.CreateUser(input)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 
@@ -42,29 +42,29 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-// @Summary		SignIn
+// @Summary			SignIn
 // @Tags			auth
-// @Description	Вход
+// @Description		Вход
 // @ID				login
 // @Accept			json
-// @Produce		json
+// @Produce			json
 // @Param			input	body		signInInput	true	"credentials"
-// @Success		200		{object}	signInResponse
-// @Failure		400		{object}	errorResponse
-// @Failure		500		{object}	errorResponse
-// @Failure		default	{object}	errorResponse
+// @Success			200		{object}	signInResponse
+// @Failure			400		{object}	errorResponse
+// @Failure			500		{object}	errorResponse
+// @Failure			default	{object}	errorResponse
 // @Router			/auth/sign-in [post]
 func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	token, err := h.services.Authorization.GenerateToken(input.Username, input.Password)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 

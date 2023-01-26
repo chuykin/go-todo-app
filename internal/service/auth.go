@@ -7,13 +7,12 @@ import (
 	"github.com/IncubusX/go-todo-app/internal/entity"
 	"github.com/IncubusX/go-todo-app/internal/repository"
 	"github.com/dgrijalva/jwt-go"
+	"os"
 	"time"
 )
 
 const (
-	salt       = "qwhdnejk12hj3b125"
-	signingKey = "@!#$23jk4hj$!@4bhjk12b3123B@!#1"
-	tokenTTL   = 12 * time.Hour
+	tokenTTL = 12 * time.Hour
 )
 
 type AuthService struct {
@@ -48,7 +47,7 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 		user.Id,
 	})
 
-	return token.SignedString([]byte(signingKey))
+	return token.SignedString([]byte(os.Getenv("JWT_SIGNING_KEY")))
 }
 
 func (s *AuthService) ParseToken(accessToken string) (int, error) {
@@ -56,7 +55,7 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
-		return []byte(signingKey), nil
+		return []byte(os.Getenv("JWT_SIGNING_KEY")), nil
 	})
 	if err != nil {
 		return 0, err
@@ -74,5 +73,5 @@ func generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 
-	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(os.Getenv("JWT_SALT"))))
 }
