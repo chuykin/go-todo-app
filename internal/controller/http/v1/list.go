@@ -28,12 +28,12 @@ func (h *Handler) createList(c *gin.Context) {
 
 	var input entity.TodoList
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 	id, err := h.services.TodoList.Create(userId, input)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 
@@ -66,7 +66,7 @@ func (h *Handler) getAllLists(c *gin.Context) {
 
 	lists, err := h.services.TodoList.GetAll(userId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 
@@ -96,13 +96,13 @@ func (h *Handler) getListById(c *gin.Context) {
 
 	listId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	list, err := h.services.TodoList.GetById(userId, listId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 
@@ -132,18 +132,18 @@ func (h *Handler) updateList(c *gin.Context) {
 
 	listId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	var input entity.UpdateListInput
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	if err = h.services.TodoList.Update(userId, listId, input); err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 
@@ -173,12 +173,12 @@ func (h *Handler) deleteList(c *gin.Context) {
 
 	listId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
 		return
 	}
 
 	if err = h.services.TodoList.Delete(userId, listId); err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
 		return
 	}
 

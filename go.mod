@@ -3,6 +3,7 @@ module github.com/IncubusX/go-todo-app
 go 1.19
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/golang/mock v1.6.0
@@ -62,6 +63,5 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/ugorji/go/codec v1.2.8 // indirect
-	github.com/zhashkevych/go-sqlxmock v1.5.1
 	golang.org/x/crypto v0.4.0 // indirect
 )

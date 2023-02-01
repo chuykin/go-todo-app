@@ -104,3 +104,64 @@ func TestHandler_userIdentity(t *testing.T) {
 	}
 
 }
+
+func TestHandler_getUserId(t *testing.T) {
+	tt := []struct {
+		name                 string
+		setCtx               func(c *gin.Context)
+		expectedStatusCode   int
+		expectedResponseBody string
+	}{
+		{
+			name: "Empty userCtx",
+			setCtx: func(c *gin.Context) {
+			},
+			expectedStatusCode:   500,
+			expectedResponseBody: `{"message":"user id not found"}`,
+		},
+		{
+			name: "Wrong userCtx type",
+			setCtx: func(c *gin.Context) {
+				c.Set(userCtx, "wrong type")
+			},
+			expectedStatusCode:   500,
+			expectedResponseBody: `{"message":"user id is of invalid type"}`,
+		},
+		{
+			name: "Ok",
+			setCtx: func(c *gin.Context) {
+				c.Set(userCtx, 1)
+			},
+			expectedStatusCode:   200,
+			expectedResponseBody: `1`,
+		},
+	}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+
+			gin.SetMode(gin.ReleaseMode)
+
+			w := httptest.NewRecorder()
+			req := httptest.NewRequest("GET", "/test", nil)
+
+			r := gin.New()
+
+			//Регистрируем функцию, которая будет обернута в Middleware
+			r.GET("/test", func(c *gin.Context) {
+				tc.setCtx(c)
+
+				id, err := getUserId(c)
+				if err == nil {
+					c.String(200, fmt.Sprintf("%d", id))
+				}
+			})
+
+			r.ServeHTTP(w, req)
+
+			assert.Equal(t, w.Code, tc.expectedStatusCode)
+			assert.Equal(t, w.Body.String(), tc.expectedResponseBody)
+		})
+	}
+
+}
