@@ -1,0 +1,1058 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>v1: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/IncubusX/go-todo-app/internal/controller/http/v1/auth.go (100.0%)</option>
+				
+				<option value="file1">github.com/IncubusX/go-todo-app/internal/controller/http/v1/handler.go (3.8%)</option>
+				
+				<option value="file2">github.com/IncubusX/go-todo-app/internal/controller/http/v1/item.go (100.0%)</option>
+				
+				<option value="file3">github.com/IncubusX/go-todo-app/internal/controller/http/v1/list.go (100.0%)</option>
+				
+				<option value="file4">github.com/IncubusX/go-todo-app/internal/controller/http/v1/middleware.go (100.0%)</option>
+				
+				<option value="file5">github.com/IncubusX/go-todo-app/internal/controller/http/v1/response.go (100.0%)</option>
+				
+				<option value="file6">github.com/IncubusX/go-todo-app/internal/repository/postgres/postgres.go (0.0%)</option>
+				
+				<option value="file7">github.com/IncubusX/go-todo-app/internal/repository/postgres/postgres_auth.go (100.0%)</option>
+				
+				<option value="file8">github.com/IncubusX/go-todo-app/internal/repository/postgres/postgres_todo_item.go (100.0%)</option>
+				
+				<option value="file9">github.com/IncubusX/go-todo-app/internal/repository/postgres/postgres_todo_list.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package v1
+
+import (
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/gin-gonic/gin"
+        "net/http"
+)
+
+// @Summary                        SignUp
+// @Tags                        auth
+// @Description                Создание аккаунта
+// @ID                                create-account
+// @Accept                        json
+// @Produce                        json
+// @Param                        input        body                entity.User        true        "account info"
+// @Success                        200                {object}        idResponse
+// @Failure                        400                {object}        errorResponse
+// @Failure                        500                {object}        errorResponse
+// @Failure                        default        {object}        errorResponse
+// @Router                        /auth/sign-up [post]
+func (h *Handler) signUp(c *gin.Context) <span class="cov10" title="3">{
+        var input entity.User
+
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov6" title="2">id, err := h.services.Authorization.CreateUser(input)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, idResponse{
+                Id: id,
+        })</span>
+}
+
+type signInInput struct {
+        Username string `json:"username" binding:"required"`
+        Password string `json:"password" binding:"required"`
+}
+
+// @Summary                        SignIn
+// @Tags                        auth
+// @Description                Вход
+// @ID                                login
+// @Accept                        json
+// @Produce                        json
+// @Param                        input        body                signInInput        true        "credentials"
+// @Success                        200                {object}        signInResponse
+// @Failure                        400                {object}        errorResponse
+// @Failure                        500                {object}        errorResponse
+// @Failure                        default        {object}        errorResponse
+// @Router                        /auth/sign-in [post]
+func (h *Handler) signIn(c *gin.Context) <span class="cov10" title="3">{
+        var input signInInput
+
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov6" title="2">token, err := h.services.Authorization.GenerateToken(input.Username, input.Password)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, signInResponse{
+                Token: token,
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package v1
+
+import (
+        _ "github.com/IncubusX/go-todo-app/docs"
+        "github.com/IncubusX/go-todo-app/internal/service"
+        "github.com/gin-gonic/gin"
+        "github.com/swaggo/files"       // swagger embed files
+        "github.com/swaggo/gin-swagger" // gin-swagger middleware
+)
+
+type Handler struct {
+        services *service.Service
+}
+
+func NewHandler(services *service.Service) *Handler <span class="cov10" title="53">{
+        return &amp;Handler{services: services}
+}</span>
+
+func (h *Handler) InitRoutes() *gin.Engine <span class="cov0" title="0">{
+        router := gin.New()
+        router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+        auth := router.Group("/auth")
+        </span><span class="cov0" title="0">{
+                auth.POST("/sign-up", h.signUp)
+                auth.POST("/sign-in", h.signIn)
+        }</span>
+
+        <span class="cov0" title="0">api := router.Group("/api/v1", h.userIdentity)
+        </span><span class="cov0" title="0">{
+                lists := api.Group("/lists")
+                </span><span class="cov0" title="0">{
+                        lists.POST("/", h.createList)
+                        lists.GET("/", h.getAllLists)
+                        lists.GET("/:id", h.getListById)
+                        lists.PUT("/:id", h.updateList)
+                        lists.DELETE("/:id", h.deleteList)
+
+                        items := lists.Group(":id/items")
+                        </span><span class="cov0" title="0">{
+                                items.POST("/", h.createItem)
+                                items.GET("/", h.getAllItems)
+                        }</span>
+                }
+                <span class="cov0" title="0">items := api.Group("items")
+                </span><span class="cov0" title="0">{
+                        items.GET("/:item_id", h.getItemById)
+                        items.PUT("/:item_id", h.updateItem)
+                        items.DELETE("/:item_id", h.deleteItem)
+                }</span>
+        }
+
+        <span class="cov0" title="0">return router</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package v1
+
+import (
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/gin-gonic/gin"
+        "net/http"
+        "strconv"
+)
+
+// @Summary                Create item
+// @Security                ApiKeyAuth
+// @Tags                        items
+// @Description        Создание задачи
+// @ID                                create-item
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int                                true        "List ID"
+// @Param                        input        body                entity.TodoItem        true        "item info"
+// @Success                200                {object}        idResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists/{id}/items [post]
+func (h *Handler) createItem(c *gin.Context) <span class="cov10" title="5">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="4">listId, err := strconv.Atoi(c.Param("id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov7" title="3">var input entity.TodoItem
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+        <span class="cov4" title="2">id, err := h.services.TodoItem.Create(userId, listId, input)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, idResponse{
+                Id: id,
+        })</span>
+}
+
+type getAllItemsResponse struct {
+        Data []entity.TodoItem `json:"data"`
+}
+
+// @Summary                Get All list item
+// @Security                ApiKeyAuth
+// @Tags                        items
+// @Description        Получение списка задач
+// @ID                                get-all-list-items
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int        true        "List ID"
+// @Success                200                {object}        getAllItemsResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists/{id}/items [get]
+func (h *Handler) getAllItems(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">listId, err := strconv.Atoi(c.Param("id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">items, err := h.services.TodoItem.GetAll(userId, listId)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, getAllItemsResponse{
+                Data: items,
+        })</span>
+}
+
+// @Summary                Get list item By ID
+// @Security                ApiKeyAuth
+// @Tags                        items
+// @Description        Получение конкретной задачи по ИД
+// @ID                                get-list-item-by-id
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int        true        "Item ID"
+// @Success                200                {object}        entity.TodoItem
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/items/{id} [get]
+func (h *Handler) getItemById(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">itemId, err := strconv.Atoi(c.Param("item_id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">item, err := h.services.TodoItem.GetById(userId, itemId)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, item)</span>
+}
+
+// @Summary                Update list item
+// @Security                ApiKeyAuth
+// @Tags                        items
+// @Description        Обновление задачи
+// @ID                                update-item
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int                                true        "List ID"
+// @Param                        input        body                entity.TodoItem        true        "item info"
+// @Success                200                {object}        statusResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/items/{id} [put]
+func (h *Handler) updateItem(c *gin.Context) <span class="cov10" title="5">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="4">itemId, err := strconv.Atoi(c.Param("item_id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov7" title="3">var input entity.UpdateItemInput
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">if err = h.services.TodoItem.Update(userId, itemId, input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, statusResponse{
+                Status: "ok",
+        })</span>
+
+}
+
+// @Summary                Delete list item
+// @Security                ApiKeyAuth
+// @Tags                        items
+// @Description        Удаление задачи
+// @ID                                delete-item
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int        true        "Item ID"
+// @Success                200                {object}        statusResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/items/{id} [delete]
+func (h *Handler) deleteItem(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">itemId, err := strconv.Atoi(c.Param("item_id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">if err = h.services.TodoItem.Delete(userId, itemId); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, statusResponse{
+                Status: "ok",
+        })</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package v1
+
+import (
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/gin-gonic/gin"
+        "net/http"
+        "strconv"
+)
+
+// @Summary                Create list
+// @Security                ApiKeyAuth
+// @Tags                        lists
+// @Description        Создание списка задач
+// @ID                                create-list
+// @Accept                        json
+// @Produce                json
+// @Param                        input        body                entity.TodoList        true        "list info"
+// @Success                200                {object}        idResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists [post]
+func (h *Handler) createList(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">var input entity.TodoList
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+        <span class="cov4" title="2">id, err := h.services.TodoList.Create(userId, input)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, idResponse{
+                Id: id,
+        })</span>
+}
+
+type getAllListsResponse struct {
+        Data []entity.TodoList `json:"data"`
+}
+
+// @Summary                Get all lists
+// @Security                ApiKeyAuth
+// @Tags                        lists
+// @Description        Вывод всех задач
+// @ID                                get-all-lists
+// @Accept                        json
+// @Produce                json
+// @Success                200                {object}        getAllListsResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists [get]
+func (h *Handler) getAllLists(c *gin.Context) <span class="cov7" title="3">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov4" title="2">lists, err := h.services.TodoList.GetAll(userId)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, getAllListsResponse{
+                Data: lists,
+        })</span>
+}
+
+// @Summary                Get list by ID
+// @Security                ApiKeyAuth
+// @Tags                        lists
+// @Description        Получение списка по ИД
+// @ID                                get-list-by-id
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int        true        "List ID"
+// @Success                200                {object}        entity.TodoList
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists/{id} [get]
+func (h *Handler) getListById(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">listId, err := strconv.Atoi(c.Param("id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">list, err := h.services.TodoList.GetById(userId, listId)
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, list)</span>
+}
+
+// @Summary                Update list
+// @Security                ApiKeyAuth
+// @Tags                        lists
+// @Description        Обновление списка задач
+// @ID                                update-list
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int                                true        "List ID"
+// @Param                        input        body                entity.TodoList        true        "list info"
+// @Success                200                {object}        statusResponse
+// @Success                200                {object}        statusResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists/{id} [put]
+func (h *Handler) updateList(c *gin.Context) <span class="cov10" title="5">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="4">listId, err := strconv.Atoi(c.Param("id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov7" title="3">var input entity.UpdateListInput
+        if err := c.BindJSON(&amp;input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">if err = h.services.TodoList.Update(userId, listId, input); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, statusResponse{
+                Status: "ok",
+        })</span>
+}
+
+// @Summary                Delete list
+// @Security                ApiKeyAuth
+// @Tags                        lists
+// @Description        Удаление списка задач
+// @ID                                delete-list
+// @Accept                        json
+// @Produce                json
+// @Param                        id                path                int        true        "List ID"
+// @Success                200                {object}        statusResponse
+// @Failure                400,401        {object}        errorResponse
+// @Failure                500                {object}        errorResponse
+// @Failure                default        {object}        errorResponse
+// @Router                        /api/v1/lists/{id} [delete]
+func (h *Handler) deleteList(c *gin.Context) <span class="cov8" title="4">{
+        userId, err := getUserId(c)
+        if err != nil </span><span class="cov1" title="1">{
+                return
+        }</span>
+
+        <span class="cov7" title="3">listId, err := strconv.Atoi(c.Param("id"))
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusBadRequest, ErrInvalidInputBody)
+                return
+        }</span>
+
+        <span class="cov4" title="2">if err = h.services.TodoList.Delete(userId, listId); err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrServiceFailure)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.JSON(http.StatusOK, statusResponse{
+                Status: "ok",
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package v1
+
+import (
+        "errors"
+        "github.com/gin-gonic/gin"
+        "net/http"
+        "strings"
+)
+
+const (
+        AuthorizationHeader  = "Authorization"
+        userCtx              = "userId"
+        ErrEmptyAuthHeader   = "auth header is empty"
+        ErrEmptyToken        = "token is empty"
+        ErrInvalidAuthHeader = "invalid auth header"
+        ErrFailedParseToken  = "failed to parse token"
+        ErrUserNotFound      = "user id not found"
+        ErrUserInvalidType   = "user id is of invalid type"
+)
+
+func (h *Handler) userIdentity(c *gin.Context) <span class="cov4" title="5">{
+        header := c.GetHeader(AuthorizationHeader)
+        if header == "" </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusUnauthorized, ErrEmptyAuthHeader)
+                return
+        }</span>
+
+        <span class="cov4" title="4">headerParts := strings.Split(header, " ")
+
+        if len(headerParts) != 2 || headerParts[0] != "Bearer" </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusUnauthorized, ErrInvalidAuthHeader)
+                return
+        }</span>
+
+        <span class="cov3" title="3">if headerParts[1] == "" </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusUnauthorized, ErrEmptyToken)
+                return
+        }</span>
+
+        <span class="cov2" title="2">userId, err := h.services.Authorization.ParseToken(headerParts[1])
+        if err != nil </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusUnauthorized, ErrFailedParseToken)
+                return
+        }</span>
+
+        <span class="cov1" title="1">c.Set(userCtx, userId)</span>
+}
+
+func getUserId(c *gin.Context) (int, error) <span class="cov10" title="45">{
+        id, ok := c.Get(userCtx)
+        if !ok </span><span class="cov6" title="11">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrUserNotFound)
+                return 0, errors.New(ErrUserNotFound)
+        }</span>
+
+        <span class="cov9" title="34">idInt, ok := id.(int)
+        if !ok </span><span class="cov1" title="1">{
+                newErrorResponse(c, http.StatusInternalServerError, ErrUserInvalidType)
+                return 0, errors.New(ErrUserInvalidType)
+        }</span>
+        <span class="cov9" title="33">return idInt, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package v1
+
+import (
+        "github.com/gin-gonic/gin"
+        "github.com/sirupsen/logrus"
+)
+
+const (
+        ErrInvalidInputBody = "invalid input body"
+        ErrServiceFailure   = "service failure"
+)
+
+type signInResponse struct {
+        Token string `json:"token"`
+}
+
+type idResponse struct {
+        Id int `json:"id"`
+}
+
+type errorResponse struct {
+        Message string `json:"message"`
+}
+
+type statusResponse struct {
+        Status string `json:"status"`
+}
+
+func newErrorResponse(c *gin.Context, statusCode int, message string) <span class="cov10" title="42">{
+        logrus.Error(message)
+        c.AbortWithStatusJSON(statusCode, errorResponse{message})
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package repository
+
+import (
+        "fmt"
+        "github.com/jmoiron/sqlx"
+        "github.com/sirupsen/logrus"
+        "time"
+)
+
+type Config struct {
+        Host     string
+        Port     string
+        Username string
+        Password string
+        DBName   string
+        SSLMode  string
+}
+
+const (
+        usersTable      = "users"
+        todoListsTable  = "todo_lists"
+        usersListsTable = "user_lists"
+        todoItemsTable  = "todo_items"
+        listsItemsTable = "list_items"
+
+        ReconnectCount    = 5
+        ReconnectCooldown = 5 * time.Second
+)
+
+func NewDB(cfg Config) (*sqlx.DB, error) <span class="cov0" title="0">{
+        connectString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+                cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode)
+
+        db, err := sqlx.Open("postgres", connectString)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">err = db.Ping()
+        if err != nil </span><span class="cov0" title="0">{
+                for i := 0; i &lt; ReconnectCount; i++ </span><span class="cov0" title="0">{
+                        time.Sleep(ReconnectCooldown)
+                        logrus.Printf("Повторная попытка подключения к БД #%d", i+1)
+                        err = db.Ping()
+                        if err == nil </span><span class="cov0" title="0">{
+                                logrus.Println("Успешное подключение к БД")
+                                break</span>
+                        }
+                        <span class="cov0" title="0">if i == ReconnectCount-1 </span><span class="cov0" title="0">{
+                                return nil, err
+                        }</span>
+                }
+        }
+        <span class="cov0" title="0">return db, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package repository
+
+import (
+        "fmt"
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/jmoiron/sqlx"
+)
+
+type Auth struct {
+        db *sqlx.DB
+}
+
+func NewAuth(db *sqlx.DB) *Auth <span class="cov10" title="2">{
+        return &amp;Auth{db: db}
+}</span>
+
+func (r *Auth) CreateUser(user entity.User) (int, error) <span class="cov10" title="2">{
+        var id int
+        query := fmt.Sprintf("INSERT INTO %s (name, username, password_hash) VALUES ($1,$2,$3) RETURNING id", usersTable)
+        row := r.db.QueryRow(query, user.Name, user.Username, user.Password)
+        if err := row.Scan(&amp;id); err != nil </span><span class="cov1" title="1">{
+                return 0, err
+        }</span>
+        <span class="cov1" title="1">return id, nil</span>
+}
+
+func (r *Auth) GetUser(username, password string) (entity.User, error) <span class="cov10" title="2">{
+        var user entity.User
+        query := fmt.Sprintf("SELECT id FROM %s WHERE username = $1 and password_hash = $2", usersTable)
+        err := r.db.Get(&amp;user, query, username, password)
+
+        return user, err
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package repository
+
+import (
+        "fmt"
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/jmoiron/sqlx"
+        "strings"
+)
+
+type TodoItem struct {
+        db *sqlx.DB
+}
+
+func NewTodoItem(db *sqlx.DB) *TodoItem <span class="cov10" title="5">{
+        return &amp;TodoItem{db: db}
+}</span>
+
+func (r *TodoItem) Create(listId int, input entity.TodoItem) (int, error) <span class="cov8" title="4">{
+        tx, err := r.db.Begin()
+        if err != nil </span><span class="cov1" title="1">{
+                return 0, err
+        }</span>
+
+        <span class="cov7" title="3">var itemId int
+        createItemQuery := fmt.Sprintf("INSERT INTO %s (title, description) VALUES ($1, $2) RETURNING id;", todoItemsTable)
+        row := tx.QueryRow(createItemQuery, input.Title, input.Description)
+        if err = row.Scan(&amp;itemId); err != nil </span><span class="cov1" title="1">{
+                _ = tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov4" title="2">createListItemsQuery := fmt.Sprintf("INSERT INTO %s (list_id, item_id) VALUES ($1, $2);", listsItemsTable)
+        _, err = tx.Exec(createListItemsQuery, listId, itemId)
+        if err != nil </span><span class="cov1" title="1">{
+                _ = tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov1" title="1">return itemId, tx.Commit()</span>
+}
+
+func (r *TodoItem) GetAll(userId, listId int) ([]entity.TodoItem, error) <span class="cov4" title="2">{
+        var items []entity.TodoItem
+
+        query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s AS ti "+
+                "INNER JOIN %s AS li ON li.item_id = ti.id "+
+                "INNER JOIN %s AS ul ON ul.list_id = li.list_id "+
+                "WHERE ul.user_id = $1 AND ul.list_id = $2;",
+                todoItemsTable, listsItemsTable, usersListsTable)
+        if err := r.db.Select(&amp;items, query, userId, listId); err != nil </span><span class="cov1" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov1" title="1">return items, nil</span>
+}
+
+func (r *TodoItem) GetById(userId, itemId int) (entity.TodoItem, error) <span class="cov4" title="2">{
+        var item entity.TodoItem
+
+        query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s AS ti "+
+                "INNER JOIN %s AS li ON li.item_id = ti.id "+
+                "INNER JOIN %s AS ul ON ul.list_id = li.list_id "+
+                "WHERE ul.user_id = $1 AND ti.id = $2;",
+                todoItemsTable, listsItemsTable, usersListsTable)
+        err := r.db.Get(&amp;item, query, userId, itemId)
+
+        return item, err
+}</span>
+
+func (r *TodoItem) Update(userId, itemId int, input entity.UpdateItemInput) error <span class="cov10" title="5">{
+        setValues := make([]string, 0)
+        args := make([]interface{}, 0)
+        argId := 1
+
+        if input.Title != nil </span><span class="cov7" title="3">{
+                setValues = append(setValues, fmt.Sprintf("title=$%d", argId))
+                args = append(args, *input.Title)
+                argId++
+        }</span>
+
+        <span class="cov10" title="5">if input.Description != nil </span><span class="cov7" title="3">{
+                setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+                args = append(args, *input.Description)
+                argId++
+        }</span>
+
+        <span class="cov10" title="5">if input.Done != nil </span><span class="cov7" title="3">{
+                setValues = append(setValues, fmt.Sprintf("done=$%d", argId))
+                args = append(args, *input.Done)
+                argId++
+        }</span>
+
+        <span class="cov10" title="5">setQuery := strings.Join(setValues, ", ")
+
+        query := fmt.Sprintf(`UPDATE %s AS ti SET %s 
+                                                                        FROM %s AS ul, %s AS li 
+                                                                        WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $%d AND ti.id = $%d`,
+                todoItemsTable, setQuery, usersListsTable, listsItemsTable, argId, argId+1)
+
+        args = append(args, userId, itemId)
+
+        _, err := r.db.Exec(query, args...)
+
+        return err</span>
+}
+
+func (r *TodoItem) Delete(userId, itemId int) error <span class="cov4" title="2">{
+        query := fmt.Sprintf(`DELETE FROM %s AS ti USING %s as ul, %s as li WHERE  ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $1 AND ti.id = $2;`,
+                todoItemsTable, usersListsTable, listsItemsTable)
+        _, err := r.db.Exec(query, userId, itemId)
+
+        return err
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package repository
+
+import (
+        "fmt"
+        "github.com/IncubusX/go-todo-app/internal/entity"
+        "github.com/jmoiron/sqlx"
+        "strings"
+)
+
+type TodoList struct {
+        db *sqlx.DB
+}
+
+func NewTodoList(db *sqlx.DB) *TodoList <span class="cov10" title="5">{
+        return &amp;TodoList{db: db}
+}</span>
+
+func (r *TodoList) Create(userId int, input entity.TodoList) (int, error) <span class="cov8" title="4">{
+        tx, err := r.db.Begin()
+        if err != nil </span><span class="cov1" title="1">{
+                return 0, err
+        }</span>
+
+        <span class="cov7" title="3">var id int
+        createListQuery := fmt.Sprintf("INSERT INTO %s (title, description) VALUES ($1, $2) RETURNING id;", todoListsTable)
+        row := tx.QueryRow(createListQuery, input.Title, input.Description)
+        if err = row.Scan(&amp;id); err != nil </span><span class="cov1" title="1">{
+                _ = tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov4" title="2">createUserLists := fmt.Sprintf("INSERT INTO %s (user_id, list_id) VALUES ($1, $2);", usersListsTable)
+        _, err = tx.Exec(createUserLists, userId, id)
+        if err != nil </span><span class="cov1" title="1">{
+                _ = tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov1" title="1">return id, tx.Commit()</span>
+}
+
+func (r *TodoList) GetAll(userId int) ([]entity.TodoList, error) <span class="cov4" title="2">{
+        var lists []entity.TodoList
+
+        query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s AS tl INNER JOIN %s AS ul ON tl.id = ul.list_id WHERE ul.user_id = $1;",
+                todoListsTable, usersListsTable)
+        err := r.db.Select(&amp;lists, query, userId)
+
+        return lists, err
+}</span>
+
+func (r *TodoList) GetById(userId, listId int) (entity.TodoList, error) <span class="cov4" title="2">{
+        var list entity.TodoList
+
+        query := fmt.Sprintf(`SELECT tl.id, tl.title, tl.description FROM %s AS tl 
+                                                                   INNER JOIN %s AS ul ON tl.id = ul.list_id 
+                                                                   WHERE ul.user_id = $1 AND tl.id = $2;`, todoListsTable, usersListsTable)
+        err := r.db.Get(&amp;list, query, userId, listId)
+
+        return list, err
+}</span>
+
+func (r *TodoList) Update(userId, listId int, input entity.UpdateListInput) error <span class="cov8" title="4">{
+        setValues := make([]string, 0)
+        args := make([]interface{}, 0)
+        argId := 1
+
+        if input.Title != nil </span><span class="cov7" title="3">{
+                setValues = append(setValues, fmt.Sprintf("title=$%d", argId))
+                args = append(args, *input.Title)
+                argId++
+        }</span>
+
+        <span class="cov8" title="4">if input.Description != nil </span><span class="cov7" title="3">{
+                setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+                args = append(args, *input.Description)
+                argId++
+        }</span>
+
+        <span class="cov8" title="4">setQuery := strings.Join(setValues, ", ")
+
+        query := fmt.Sprintf(`UPDATE %s AS tl SET %s FROM %s AS ul WHERE tl.id = ul.list_id AND ul.user_id = $%d AND ul.list_id = $%d`,
+                todoListsTable, setQuery, usersListsTable, argId, argId+1)
+
+        args = append(args, userId, listId)
+        _, err := r.db.Exec(query, args...)
+
+        return err</span>
+}
+
+func (r *TodoList) Delete(userId, listId int) error <span class="cov4" title="2">{
+        query := fmt.Sprintf(`DELETE FROM %s AS tl USING %s as ul WHERE tl.id = ul.list_id AND ul.user_id = $1 AND ul.list_id = $2;`,
+                todoListsTable, usersListsTable)
+        _, err := r.db.Exec(query, userId, listId)
+
+        return err
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

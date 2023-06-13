@@ -2,7 +2,7 @@ build:
 	docker-compose build api
 
 run:
-	docker-compose up -d api
+	docker-compose up --remove-orphans -d api
 
 test:
 	go test -v -count=1 ./...
